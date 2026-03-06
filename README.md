@@ -1,2 +1,2 @@
-# sns
-client-side SDK for interacting with Solana Name Service program
+# SNS
+Client-side SDK for interacting with Solana Name Service Program.
