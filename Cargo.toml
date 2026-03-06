@@ -1,0 +1,45 @@
+[package]
+name = "sns-wasm"
+version = "0.1.0"
+edition = "2024"
+
+[lints]
+rust.missing_debug_implementations = "warn"
+rust.missing_docs = "warn"
+rust.rust_2018_idioms = { level = "deny", priority = -1 }
+rust.unreachable_pub = "warn"
+rust.unused_must_use = "deny"
+rustdoc.all = "warn"
+# rust.unnameable-types = "warn"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# solana
+spl-name-service = "0.3.1"
+solana-pubkey = { version = "4.1", features = ["serde"] }
+solana-rent = { version = "4.1", features = ["serde"] }
+solana-instruction = { version = "3.2", features = ["serde"] }
+solana-program-error = { version = "3.0", features = ["serde"] }
+solana-hash = { version = "4.2", features = ["copy", "serde"] }
+
+# wasm
+wasm-bindgen = "0.2"
+serde-wasm-bindgen = "0.6"
+serde = "1.0"
+
+# misc
+derive_more = { version = "2.1", default-features = false, features = [
+    "constructor",
+    "deref",
+    "from",
+    "into",
+]}
+sha2 = "0.10"
+
+[profile.release]
+opt-level = 'z' # optimize for size
+lto = 'fat'
+codegen-units = 1
+panic = "abort"
