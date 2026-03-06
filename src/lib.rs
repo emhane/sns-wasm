@@ -1,6 +1,11 @@
-#![warn(clippy::large_stack_arrays)]
-
+//! # SNS-WASM
+//!
+//! <div style="background: #fff3cd; color: #856404; padding: 15px; border: 1px solid #ffeeba;
+//! border-radius: 4px;"> <strong>Warning:</strong> This crate is experimental. Only one
+//! instruction is currently supported. </div>
 //! Client-side SNS-WASM SDK.
+
+#![warn(clippy::large_stack_arrays)]
 
 pub mod constants;
 pub mod instruction_builder;
