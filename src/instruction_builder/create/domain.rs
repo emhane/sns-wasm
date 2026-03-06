@@ -20,8 +20,7 @@ pub struct CreateDomainInstBuilder {
 impl CreateDomainInstBuilder {
     /// Returns new builder for given payer, parent SNS record and user defined name.
     ///
-    /// - Reserves no extra space for user data, like URLs and social media handles. See
-    /// [space](Self::space)
+    /// - Reserves no extra space for user data, like URLs and social media handles. See [`space`](Self::space)
     /// - Unless [`owner`](Self::owner) explicitly set defaults to payer
     /// - Unless [`class``](Self::class) explicitly set defaults to System Program (null address),
     pub fn new(payer: Pubkey, tld: TLDomain, name: String) -> Self {
