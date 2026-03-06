@@ -1,3 +1,5 @@
+#![warn(clippy::large_stack_arrays)]
+
 //! Client-side SNS-WASM SDK.
 
 pub mod constants;

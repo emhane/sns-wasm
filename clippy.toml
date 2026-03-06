@@ -1,0 +1,1 @@
+array-size-threshold = 16384 # 16 KiB (safe for wasm's 1MB stack)
