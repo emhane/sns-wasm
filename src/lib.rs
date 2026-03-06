@@ -1,5 +1,7 @@
 //! # SNS-WASM
 //!
+//! Specs: <https://sns.guide/introduction.html>
+//!
 //! <div style="background: #fff3cd; color: #856404; padding: 15px; border: 1px solid #ffeeba;
 //! border-radius: 4px;"> <strong>Warning:</strong> This crate is experimental. Only one
 //! instruction is currently supported. </div>
