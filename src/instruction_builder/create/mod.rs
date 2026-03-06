@@ -2,10 +2,10 @@
 
 pub mod domain;
 pub mod subdomain;
+
 pub use domain::CreateDomainInstBuilder;
 pub use subdomain::CreateSubdomainInstBuilder;
 
-use serde::Deserialize;
 use solana_instruction::Instruction;
 use solana_program_error::ProgramError;
 use solana_pubkey::Pubkey;
@@ -19,7 +19,7 @@ use spl_name_service::{
 use crate::{SNS_PROGRAM_ID, SNSNode, SNSNodeWithOwner, from_v2_err, from_v2_instr, to_v2};
 
 /// Builds instruction to include in transaction to register SNS record.
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Copy)]
 pub struct CreateInstBuilder {
     payer: Pubkey,
     account: SNSNode,

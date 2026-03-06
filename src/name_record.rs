@@ -1,13 +1,16 @@
 //! SNS record types: TLD, domain and subdomain.
 
 use derive_more::{Constructor, Deref, Into};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use solana_pubkey::Pubkey;
 
-use crate::{SNSNode, SOL_TLD_OWNER_ADDRESS_MAINNET, derive_domain, derive_subdomain, derive_tld};
+use crate::{
+    SNSNode, SOL_TLD_ADDRESS, SOL_TLD_OWNER_ADDRESS_MAINNET, derive_domain, derive_subdomain,
+    derive_tld,
+};
 
 /// SNS record address and its owner.
-#[derive(Debug, Clone, Copy, Constructor, Deserialize)]
+#[derive(Debug, Clone, Copy, Default, Constructor, Serialize, Deserialize)]
 pub struct SNSNodeWithOwner {
     /// Programmatically Derived Address (PDA) of this account.
     pub pda: Pubkey,
@@ -18,7 +21,7 @@ pub struct SNSNodeWithOwner {
 /// Top Level Domain (TLD) SNS record.
 ///
 /// Specs: <https://sns.guide/domain-name/domain-tld.html>
-#[derive(Debug, Clone, Copy, Deref, Into)]
+#[derive(Debug, Clone, Copy, Default, Deref, Into)]
 pub struct TLDomain(SNSNodeWithOwner);
 
 impl TLDomain {
@@ -36,15 +39,13 @@ impl TLDomain {
 
     /// Returns new instance with Mainnet owner of PDA of `.sol`.
     pub fn sol_mainnet() -> Self {
-        let SNSNode { pda, .. } = SNSNode::sol();
-        Self(SNSNodeWithOwner::new(pda, SOL_TLD_OWNER_ADDRESS_MAINNET))
+        Self(SNSNodeWithOwner::new(SOL_TLD_ADDRESS, SOL_TLD_OWNER_ADDRESS_MAINNET))
     }
 
     /// Returns new instance with System Program as owner of PDA of `.sol`.
     pub fn sol_devnet() -> Self {
-        let SNSNode { pda, .. } = SNSNode::sol();
         let owner = Pubkey::default();
-        Self(SNSNodeWithOwner::new(pda, owner))
+        Self(SNSNodeWithOwner::new(SOL_TLD_ADDRESS, owner))
     }
 }
 

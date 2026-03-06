@@ -1,7 +1,7 @@
 //! Generate programmatically derived addresses (PDAs).
 
 use derive_more::Constructor;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use sha2::{Digest as _, Sha256};
 use solana_hash::Hash;
 use solana_pubkey::Pubkey;
@@ -11,7 +11,7 @@ use crate::{ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SOL_TLD_ADDRESS, SOL_TLD_NAME_HASH
 
 /// Programmatically Derived Address (PDA) of SNS record, and its hashed name (created as input to
 /// derivation process).
-#[derive(Debug, Clone, Copy, Constructor, Deserialize)]
+#[derive(Debug, Clone, Copy, Constructor, Serialize, Deserialize)]
 pub struct SNSNode {
     /// PDA of SNS record. Derived from hashed user given name, parent PDA and
     /// class address.
@@ -35,7 +35,7 @@ impl SNSNode {
 ///
 /// - Top level domains (TLDs) require '.' prefix, e.g. pass `.sol`
 /// - Subdomains require '\0' prefix, e.g. pass `code.blush.sol`
-pub fn hashed_name(name: &str) -> Hash {
+pub fn name_hash(name: &str) -> Hash {
     let mut hasher = Sha256::new();
 
     hasher.update(HASH_PREFIX.as_bytes());
@@ -53,7 +53,7 @@ pub fn hashed_name(name: &str) -> Hash {
 /// Spec: <https://sns.guide/domain-name/domain-tld.html>
 pub fn derive_tld(class: Option<&Pubkey>, name: &str) -> SNSNode {
     let dot_name = format!(".{name}");
-    let hashed_tld_name = hashed_name(&dot_name);
+    let hashed_tld_name = name_hash(&dot_name);
 
     let (tld, _) = get_seeds_and_key(
         &to_v2(SNS_PROGRAM_ID),
@@ -69,7 +69,7 @@ pub fn derive_tld(class: Option<&Pubkey>, name: &str) -> SNSNode {
 ///
 /// Spec: <https://sns.guide/domain-name/domain-tld.html>
 pub fn derive_domain(tld: &Pubkey, class: Option<&Pubkey>, name: &str) -> SNSNode {
-    let hashed_name = hashed_name(name);
+    let hashed_name = name_hash(name);
     let (domain, _) = get_seeds_and_key(
         &to_v2(SNS_PROGRAM_ID),
         hashed_name.to_bytes().to_vec(),
@@ -87,7 +87,7 @@ pub fn derive_domain(tld: &Pubkey, class: Option<&Pubkey>, name: &str) -> SNSNod
 /// <https://sns.guide/domain-name/domain-tld.html>
 pub fn derive_subdomain(parent: &Pubkey, class: Option<&Pubkey>, name: &str) -> SNSNode {
     let name_dot = format!("\0{name}");
-    let hashed_subdomain_name = hashed_name(&name_dot);
+    let hashed_subdomain_name = name_hash(&name_dot);
 
     let (subdomain, _) = get_seeds_and_key(
         &to_v2(SNS_PROGRAM_ID),
@@ -111,7 +111,7 @@ mod tests {
 
     #[test]
     fn test_sol_hashed_name() {
-        let hash = hashed_name(".sol");
+        let hash = name_hash(".sol");
         assert_eq!(hash, SOL_TLD_NAME_HASH)
     }
 

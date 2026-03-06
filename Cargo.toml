@@ -25,10 +25,10 @@ crate-type = ["cdylib"]
 # solana
 spl-name-service = "0.3.1"
 solana-pubkey = { version = "4.1", features = ["serde"] }
-solana-rent = { version = "4.1", features = ["serde"] }
+solana-rent = "4.1"
 solana-instruction = { version = "3.2", features = ["serde"] }
 solana-program-error = { version = "3.0", features = ["serde"] }
-solana-hash = { version = "4.2", features = ["copy", "serde"] }
+solana-hash = { version ="4.2", features = ["copy", "serde"] }
 
 # wasm
 wasm-bindgen = "0.2"
@@ -39,10 +39,13 @@ serde = "1.0"
 derive_more = { version = "2.1", default-features = false, features = [
     "constructor",
     "deref",
-    "from",
     "into",
 ]}
 sha2 = "0.10"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+borsh = "1.5.3"
 
 [profile.release]
 opt-level = 'z' # optimize for size
