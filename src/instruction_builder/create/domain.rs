@@ -4,7 +4,8 @@ use solana_instruction::Instruction;
 use solana_program_error::ProgramError;
 use solana_pubkey::Pubkey;
 
-use crate::{CreateInstBuilder, TLDomain, derive_domain};
+use super::CreateInstBuilder;
+use crate::{TLDomain, derive_domain};
 
 /// Builds instruction to register domain.
 #[derive(Debug)]

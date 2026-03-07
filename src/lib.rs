@@ -18,11 +18,8 @@ pub use constants::{
     ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SOL_TLD_ADDRESS, SOL_TLD_NAME_HASH,
     SOL_TLD_OWNER_ADDRESS_MAINNET,
 };
-pub use instruction_builder::create::{
-    CreateDomainInstBuilder, CreateInstBuilder, CreateSubdomainInstBuilder,
-    calculate_rent_exemption,
-};
-pub use name_record::{Domain, SNSNodeWithOwner, Subdomain, TLDomain};
+pub use instruction_builder::create::calculate_rent_exemption;
+pub use name_record::{Domain, Subdomain, TLDomain};
 pub use pda::{SNSNode, derive_domain, derive_subdomain, derive_tld, name_hash};
 
 use serde::{Deserialize, Serialize};
@@ -31,6 +28,8 @@ use solana_instruction::{AccountMeta, Instruction};
 use solana_program_error::ProgramError;
 use solana_pubkey::Pubkey;
 use wasm_bindgen::{JsError, JsValue, prelude::wasm_bindgen};
+
+use crate::name_record::SNSNodeWithOwner;
 
 /// Params to create instruction to register new SNS domain record.
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
@@ -68,10 +67,11 @@ pub fn build_create_domain_instruction(cfg: JsValue) -> Result<JsValue, JsError>
         tld,
     } = from_value(cfg)?;
 
-    let builder = CreateDomainInstBuilder::new(payer, TLDomain::new(tld.pda, tld.owner), name)
-        .owner(owner)
-        .class(class)
-        .space(space);
+    let builder =
+        Domain::create_instruction_builder(payer, TLDomain::new(tld.pda, tld.owner), name)
+            .owner(owner)
+            .class(class)
+            .space(space);
     let inst = builder.build();
 
     Ok(to_value(&inst)?)
@@ -86,7 +86,7 @@ pub fn build_create_subdomain_instruction(cfg: JsValue) -> Result<JsValue, JsErr
     } = from_value(cfg)?;
 
     let builder =
-        CreateSubdomainInstBuilder::new(payer, Domain::new(domain.pda, domain.owner), name)
+        Subdomain::create_instruction_builder(payer, Domain::new(domain.pda, domain.owner), name)
             .owner(owner)
             .class(class)
             .space(space);

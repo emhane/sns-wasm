@@ -4,7 +4,8 @@ use solana_instruction::Instruction;
 use solana_program_error::ProgramError;
 use solana_pubkey::Pubkey;
 
-use crate::{CreateInstBuilder, Domain, SNSNodeWithOwner, derive_subdomain};
+use super::CreateInstBuilder;
+use crate::{Domain, derive_subdomain, name_record::SNSNodeWithOwner};
 
 /// Builds instruction to register subdomain.
 #[derive(Debug)]

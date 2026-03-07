@@ -7,6 +7,7 @@ use solana_pubkey::Pubkey;
 use crate::{
     SNSNode, SOL_TLD_ADDRESS, SOL_TLD_OWNER_ADDRESS_MAINNET, derive_domain, derive_subdomain,
     derive_tld,
+    instruction_builder::{CreateDomainInstBuilder, CreateSubdomainInstBuilder},
 };
 
 /// SNS record address and its owner.
@@ -67,6 +68,15 @@ impl Domain {
         let SNSNode { pda, .. } = derive_domain(parent, class, name);
         Self::new(pda, owner)
     }
+
+    /// Returns builder for create domain instruction.
+    pub fn create_instruction_builder(
+        payer: Pubkey,
+        tld: TLDomain,
+        name: String,
+    ) -> CreateDomainInstBuilder {
+        CreateDomainInstBuilder::new(payer, tld, name)
+    }
 }
 
 /// Subdomain SNS record.
@@ -86,5 +96,14 @@ impl Subdomain {
     pub fn derive_new(parent: &Pubkey, owner: Pubkey, class: Option<&Pubkey>, name: &str) -> Self {
         let SNSNode { pda, .. } = derive_subdomain(parent, class, name);
         Self::new(pda, owner)
+    }
+
+    /// Returns builder for create subdomain instruction.
+    pub fn create_instruction_builder(
+        payer: Pubkey,
+        domain: Domain,
+        name: String,
+    ) -> CreateSubdomainInstBuilder {
+        CreateSubdomainInstBuilder::new(payer, domain, name)
     }
 }
