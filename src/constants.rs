@@ -8,14 +8,13 @@ use solana_pubkey::{Pubkey, pubkey};
 /// <https://explorer.solana.com/address/namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX>
 pub const SNS_PROGRAM_ID: Pubkey = pubkey!("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX");
 
-/// Root SNS node. Address is owned by Name Service Program ([`SNS_PROGRAM_ID`]).
+/// Root SNS node PDA.
 ///
 /// Specs: <https://sns.guide/domain-name/domain-tld.html>
 pub const ROOT_TLD_ADDRESS: Pubkey = pubkey!("ZoAhWEqTVqHVqupYmEanDobY7dee5YKbQox9BNASZzU");
 
 /// TLD `.sol`. A PDA derived from [`ROOT_TLD_ADDRESS`] and [`SNS_PROGRAM_ID`] (see
-/// [`derive_tld`](crate::derive_tld). Address is owned by Name Service Program
-/// ([`SNS_PROGRAM_ID`]).
+/// [`derive_tld`](crate::derive_tld).
 ///
 /// Bonfida Root Domain Account is public name of address on Mainnet.
 ///
@@ -27,6 +26,10 @@ pub const SOL_TLD_ADDRESS: Pubkey = pubkey!("58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2
 /// Note: System Program owns [`SOL_TLD_ADDRESS`] on Devnet.
 pub const SOL_TLD_OWNER_ADDRESS_MAINNET: Pubkey =
     pubkey!("33m47vH6Eav6jr5Ry86XjhRft2jRBLDnDgPSHoquXi2Z");
+
+/// Owner of SNS root [`ROOT_TLD_ADDRESS`] on Mainnet is wallet address.
+pub const ROOT_TLD_OWNER_ADDRESS_MAINNET: Pubkey =
+    pubkey!("3Wnd5Df69KitZfUoPYZU438eFRNwGHkhLnSAWL65PxJX");
 
 /// Hashed `.sol` TLD name is `sha256` hash of
 /// [`HASH_PREFIX`](spl_name_service::state::HASH_PREFIX) + `.sol`.
