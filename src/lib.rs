@@ -131,7 +131,7 @@ mod tests {
             unreachable!()
         };
         let NameRegistryInstruction::Create { hashed_name, lamports, space } =
-            bincode::deserialize(inst.data.as_slice()).expect("should deserialize")
+            wincode::deserialize(inst.data.as_slice()).expect("should deserialize")
         else {
             unreachable!("wrong instruction")
         };

@@ -23,7 +23,7 @@ crate-type = ["lib", "cdylib"]
 
 [dependencies]
 # solana
-solana-pubkey = { version = "4.1", features = ["serde"] }
+solana-pubkey = { version = "4.1", features = ["serde", "wincode"] }
 solana-rent = "4.1"
 solana-instruction = { version = "3.2", features = ["serde"] }
 solana-program-error = { version = "3.0", features = ["serde"] }
@@ -35,8 +35,8 @@ wasm-bindgen = "0.2"
 serde-wasm-bindgen = "0.6"
 
 # encoding
-serde = "1.0"
-bincode = "1.3.3"
+serde = { version = "1.0", features = ["derive"] }
+wincode = { version = "0.4", features = ["derive"] }
 
 # misc
 derive_more = { version = "2.1", default-features = false, features = [

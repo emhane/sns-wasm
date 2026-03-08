@@ -4,14 +4,14 @@ pub mod create;
 
 pub use create::{domain::CreateDomainInstBuilder, subdomain::CreateSubdomainInstBuilder};
 
-use serde::{Deserialize, Serialize};
 use solana_pubkey::Pubkey;
+use wincode::{SchemaRead, SchemaWrite};
 
 /// Instructions supported by the generic Name Registry program.
 ///
 /// Code ported from archived <https://github.com/solana-labs/solana-program-library>
 #[expect(missing_docs)]
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, PartialEq, SchemaWrite, SchemaRead)]
 pub enum NameRegistryInstruction {
     /// Create an empty name record
     ///

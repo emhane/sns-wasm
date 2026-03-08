@@ -65,7 +65,7 @@ pub fn create(
     name_parent_opt: Option<Pubkey>,
     name_parent_owner_opt: Option<Pubkey>,
 ) -> Result<Instruction, ProgramError> {
-    let data: Vec<u8> = bincode::serialize(&instruction_data).unwrap();
+    let data: Vec<u8> = wincode::serialize(&instruction_data).unwrap();
     let mut accounts = vec![
         AccountMeta::new_readonly(Pubkey::default(), false), // system program aka null address
         AccountMeta::new(payer_key, true),
