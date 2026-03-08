@@ -27,7 +27,7 @@ solana-rent = "4.1"
 solana-instruction = { version = "3.2", features = ["serde"] }
 solana-program-error = { version = "3.0", features = ["serde"] }
 solana-hash = { version ="4.2", features = ["copy", "serde"] }
-solana-address = { version = "2.2", default-features = true, features = ["curve25519", "wincode", "serde", "decode"] }
+solana-address = { version = "2.2", features = ["curve25519", "wincode", "serde", "decode"] }
 
 # wasm
 wasm-bindgen = "0.2"
