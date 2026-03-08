@@ -59,6 +59,7 @@ struct CreateSNSRecordCfgInner {
 
 #[wasm_bindgen]
 /// Computes instruction to register new domain from given parameters.
+// todo: use error codes
 pub fn build_create_domain_instruction(cfg: JsValue) -> Result<JsValue, JsError> {
     let CreateDomainCfg {
         inner: CreateSNSRecordCfgInner { payer, owner, class, name, space },
