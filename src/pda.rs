@@ -5,9 +5,12 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest as _, Sha256};
 use solana_hash::Hash;
 use solana_pubkey::Pubkey;
-use spl_name_service::state::{HASH_PREFIX, get_seeds_and_key};
+use spl_name_service::state::get_seeds_and_key;
 
-use crate::{ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SOL_TLD_ADDRESS, SOL_TLD_NAME_HASH, from_v2, to_v2};
+use crate::{
+    HASH_PREFIX, ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SOL_TLD_ADDRESS, SOL_TLD_NAME_HASH, from_v2,
+    to_v2,
+};
 
 /// Programmatically Derived Address (PDA) of SNS record, and its hashed name (created as input to
 /// derivation process).

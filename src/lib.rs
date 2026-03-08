@@ -15,7 +15,7 @@ pub mod name_record;
 pub mod pda;
 
 pub use constants::{
-    ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SOL_TLD_ADDRESS, SOL_TLD_NAME_HASH,
+    HASH_PREFIX, ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SOL_TLD_ADDRESS, SOL_TLD_NAME_HASH,
     SOL_TLD_OWNER_ADDRESS_MAINNET,
 };
 pub use instruction_builder::create::calculate_rent_exemption;

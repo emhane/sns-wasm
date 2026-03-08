@@ -31,9 +31,13 @@ pub const SOL_TLD_OWNER_ADDRESS_MAINNET: Pubkey =
 pub const ROOT_TLD_OWNER_ADDRESS_MAINNET: Pubkey =
     pubkey!("3Wnd5Df69KitZfUoPYZU438eFRNwGHkhLnSAWL65PxJX");
 
-/// Hashed `.sol` TLD name is `sha256` hash of
-/// [`HASH_PREFIX`](spl_name_service::state::HASH_PREFIX) + `.sol`.
+/// Hashed `.sol` TLD name is `sha256` hash of [`HASH_PREFIX`] + `.sol`.
 pub const SOL_TLD_NAME_HASH: Hash = Hash::new_from_array([
     232, 184, 39, 63, 48, 202, 46, 190, 215, 38, 192, 99, 147, 180, 70, 162, 246, 19, 112, 11, 204,
     167, 171, 81, 170, 134, 183, 94, 166, 73, 107, 132,
 ]);
+
+/// Prefix concatenated with user given name before hashing, in address derivation process. See
+/// [`derive_tld`](crate::derive_tld), [`derive_domain`](crate::derive_domain) and
+/// [`derive_subdomain`](crate::derive_subdomain).
+pub const HASH_PREFIX: &str = "SPL Name Service";
