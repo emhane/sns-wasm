@@ -66,7 +66,7 @@ pub fn build_create_domain_instruction(cfg: JsValue) -> Result<JsValue, JsError>
     } = from_value(cfg)?;
 
     let builder =
-        Domain::create_instruction_builder(payer, TLDomain::new(tld.pda, tld.owner), name)
+        Domain::create_instruction_builder(payer, TLDomain::new(tld.pda, tld.owner), &name)
             .owner(owner)
             .class(class)
             .space(space);
@@ -84,7 +84,7 @@ pub fn build_create_subdomain_instruction(cfg: JsValue) -> Result<JsValue, JsErr
     } = from_value(cfg)?;
 
     let builder =
-        Subdomain::create_instruction_builder(payer, Domain::new(domain.pda, domain.owner), name)
+        Subdomain::create_instruction_builder(payer, Domain::new(domain.pda, domain.owner), &name)
             .owner(owner)
             .class(class)
             .space(space);

@@ -73,9 +73,9 @@ impl Domain {
     pub fn create_instruction_builder(
         payer: Pubkey,
         tld: TLDomain,
-        name: String,
+        name: &str,
     ) -> CreateDomainInstBuilder {
-        CreateDomainInstBuilder::new(payer, tld, name)
+        CreateDomainInstBuilder::new(payer, tld, String::from(name))
     }
 }
 
@@ -102,8 +102,8 @@ impl Subdomain {
     pub fn create_instruction_builder(
         payer: Pubkey,
         domain: Domain,
-        name: String,
+        name: &str,
     ) -> CreateSubdomainInstBuilder {
-        CreateSubdomainInstBuilder::new(payer, domain, name)
+        CreateSubdomainInstBuilder::new(payer, domain, String::from(name))
     }
 }
