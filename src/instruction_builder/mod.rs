@@ -4,7 +4,7 @@ pub mod create;
 
 pub use create::{domain::CreateDomainInstBuilder, subdomain::CreateSubdomainInstBuilder};
 
-use solana_pubkey::Pubkey;
+use solana_address::Address;
 use wincode::{SchemaRead, SchemaWrite};
 
 /// Instructions supported by the generic Name Registry program.
@@ -30,9 +30,9 @@ pub enum NameRegistryInstruction {
     ///   2. `[writeable]` Name record to be created (program-derived address)
     ///   3. `[]` Account owner (written into `NameRecordHeader::owner`)
     ///   4. `[signer]` Account class (written into `NameRecordHeader::class`). If
-    ///      `Pubkey::default()` then the `signer` bit is not required
+    ///      `Address::default()` then the `signer` bit is not required
     ///   5. `[]` Parent name record (written into `NameRecordHeader::parent_name).
-    ///      `Pubkey::default()` is equivalent to no existing parent.
+    ///      `Address::default()` is equivalent to no existing parent.
     ///   6. `[signer]` Owner of the parent name record. Optional but needed if parent name
     ///      different than default.
     Create {
@@ -51,11 +51,11 @@ pub enum NameRegistryInstruction {
     /// Update the data in a name record
     ///
     /// Accounts expected by this instruction:
-    ///   * If account class is `Pubkey::default()`:
+    ///   * If account class is `Address::default()`:
     ///   0. `[writeable]` Name record to be updated
     ///   1. `[signer]` Account owner
     ///
-    ///   * If account class is not `Pubkey::default()`:
+    ///   * If account class is not `Address::default()`:
     ///   0. `[writeable]` Name record to be updated
     ///   1. `[signer]` Account class
     ///
@@ -69,11 +69,11 @@ pub enum NameRegistryInstruction {
     ///
     /// Accounts expected by this instruction:
     ///
-    ///   * If account class is `Pubkey::default()`:
+    ///   * If account class is `Address::default()`:
     ///   0. `[writeable]` Name record to be transferred
     ///   1. `[signer]` Account owner
     ///
-    ///   * If account class is not `Pubkey::default()`:
+    ///   * If account class is not `Address::default()`:
     ///   0. `[writeable]` Name record to be transferred
     ///   1. `[signer]` Account owner
     ///   2. `[signer]` Account class
@@ -83,7 +83,7 @@ pub enum NameRegistryInstruction {
     ///   1. `[signer]` Account owner
     ///   2. `[signer]` Account class
     ///   3. `[]` Parent name record
-    Transfer { new_owner: Pubkey },
+    Transfer { new_owner: Address },
 
     /// Delete a name record.
     ///

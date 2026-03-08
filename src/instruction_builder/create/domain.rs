@@ -1,8 +1,8 @@
 //! Build instruction to create new SNS domain.
 
+use solana_address::Address;
 use solana_instruction::Instruction;
 use solana_program_error::ProgramError;
-use solana_pubkey::Pubkey;
 
 use super::CreateInstBuilder;
 use crate::{TLDomain, derive_domain};
@@ -10,10 +10,10 @@ use crate::{TLDomain, derive_domain};
 /// Builds instruction to register domain.
 #[derive(Debug)]
 pub struct CreateDomainInstBuilder {
-    payer: Pubkey,
+    payer: Address,
     tld: TLDomain,
-    owner: Option<Pubkey>,
-    class: Option<Pubkey>,
+    owner: Option<Address>,
+    class: Option<Address>,
     name: String,
     space: Option<u32>,
 }
@@ -25,18 +25,18 @@ impl CreateDomainInstBuilder {
     ///   [`space`](Self::space)
     /// - Unless [`owner`](Self::owner) explicitly set defaults to payer
     /// - Unless [`class``](Self::class) explicitly set defaults to System Program (null address),
-    pub fn new(payer: Pubkey, tld: TLDomain, name: String) -> Self {
+    pub fn new(payer: Address, tld: TLDomain, name: String) -> Self {
         Self { payer, tld, owner: None, class: None, name, space: None }
     }
 
     /// Sets owner to register for SNS record.
-    pub fn owner(mut self, owner: Option<Pubkey>) -> Self {
+    pub fn owner(mut self, owner: Option<Address>) -> Self {
         self.owner = owner;
         self
     }
 
     /// Sets class to derive SNS record address from.
-    pub fn class(mut self, class: Option<Pubkey>) -> Self {
+    pub fn class(mut self, class: Option<Address>) -> Self {
         self.class = class;
         self
     }

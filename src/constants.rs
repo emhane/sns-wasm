@@ -1,18 +1,17 @@
 //! Solana public keys involved in SNS.
 
-use solana_address::address;
+use solana_address::{Address, address};
 use solana_hash::Hash;
-use solana_pubkey::{Pubkey, pubkey};
 
 /// Solana Name Service (SNS) Program ID.
 ///
 /// <https://explorer.solana.com/address/namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX>
-pub const SNS_PROGRAM_ID: Pubkey = address!("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX");
+pub const SNS_PROGRAM_ID: Address = address!("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX");
 
 /// Root SNS node PDA.
 ///
 /// Specs: <https://sns.guide/domain-name/domain-tld.html>
-pub const ROOT_TLD_ADDRESS: Pubkey = pubkey!("ZoAhWEqTVqHVqupYmEanDobY7dee5YKbQox9BNASZzU");
+pub const ROOT_TLD_ADDRESS: Address = address!("ZoAhWEqTVqHVqupYmEanDobY7dee5YKbQox9BNASZzU");
 
 /// TLD `.sol`. A PDA derived from [`ROOT_TLD_ADDRESS`] and [`SNS_PROGRAM_ID`] (see
 /// [`derive_tld`](crate::derive_tld).
@@ -20,17 +19,17 @@ pub const ROOT_TLD_ADDRESS: Pubkey = pubkey!("ZoAhWEqTVqHVqupYmEanDobY7dee5YKbQo
 /// Bonfida Root Domain Account is public name of address on Mainnet.
 ///
 /// Specs: <https://sns.guide/domain-name/domain-tld.html>
-pub const SOL_TLD_ADDRESS: Pubkey = pubkey!("58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx");
+pub const SOL_TLD_ADDRESS: Address = address!("58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx");
 
 /// Bonfida Reverse Lookup Class is owner of `.sol` ([`SOL_TLD_ADDRESS`]) on Mainnet.
 ///
 /// Note: System Program owns [`SOL_TLD_ADDRESS`] on Devnet.
-pub const SOL_TLD_OWNER_ADDRESS_MAINNET: Pubkey =
-    pubkey!("33m47vH6Eav6jr5Ry86XjhRft2jRBLDnDgPSHoquXi2Z");
+pub const SOL_TLD_OWNER_ADDRESS_MAINNET: Address =
+    address!("33m47vH6Eav6jr5Ry86XjhRft2jRBLDnDgPSHoquXi2Z");
 
 /// Owner of SNS root [`ROOT_TLD_ADDRESS`] on Mainnet is wallet address.
-pub const ROOT_TLD_OWNER_ADDRESS_MAINNET: Pubkey =
-    pubkey!("3Wnd5Df69KitZfUoPYZU438eFRNwGHkhLnSAWL65PxJX");
+pub const ROOT_TLD_OWNER_ADDRESS_MAINNET: Address =
+    address!("3Wnd5Df69KitZfUoPYZU438eFRNwGHkhLnSAWL65PxJX");
 
 /// Hashed `.sol` TLD name is `sha256` hash of [`HASH_PREFIX`] + `.sol`.
 pub const SOL_TLD_NAME_HASH: Hash = Hash::new_from_array([

@@ -5,7 +5,6 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest as _, Sha256};
 use solana_address::Address;
 use solana_hash::Hash;
-use solana_pubkey::Pubkey;
 
 use crate::{HASH_PREFIX, ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SOL_TLD_ADDRESS, SOL_TLD_NAME_HASH};
 
@@ -17,7 +16,7 @@ pub struct SNSNode {
     /// class address.
     ///
     /// See [`derive_tld`], [`derive_domain`] and [`derive_subdomain`].
-    pub pda: Pubkey,
+    pub pda: Address,
     /// Sha256 of [`HASH_PREFIX`] + user given name.
     pub hashed_name: Hash,
 }
@@ -51,7 +50,7 @@ pub fn name_hash(name: &str) -> Hash {
 /// Adds '.' prefix to given name.
 ///
 /// Spec: <https://sns.guide/domain-name/domain-tld.html>
-pub fn derive_tld(class: Option<&Pubkey>, name: &str) -> SNSNode {
+pub fn derive_tld(class: Option<&Address>, name: &str) -> SNSNode {
     let dot_name = format!(".{name}");
     let hashed_tld_name = name_hash(&dot_name);
 
@@ -68,7 +67,7 @@ pub fn derive_tld(class: Option<&Pubkey>, name: &str) -> SNSNode {
 /// Returns PDA of domain with given name and TLD.
 ///
 /// Spec: <https://sns.guide/domain-name/domain-tld.html>
-pub fn derive_domain(tld: &Pubkey, class: Option<&Pubkey>, name: &str) -> SNSNode {
+pub fn derive_domain(tld: &Address, class: Option<&Address>, name: &str) -> SNSNode {
     let hashed_name = name_hash(name);
     let (domain, _) =
         get_seeds_and_key(&SNS_PROGRAM_ID, hashed_name.to_bytes().to_vec(), class, Some(tld));
@@ -81,7 +80,7 @@ pub fn derive_domain(tld: &Pubkey, class: Option<&Pubkey>, name: &str) -> SNSNod
 /// Adds '\0' prefix to given name.
 ///
 /// <https://sns.guide/domain-name/domain-tld.html>
-pub fn derive_subdomain(parent: &Pubkey, class: Option<&Pubkey>, name: &str) -> SNSNode {
+pub fn derive_subdomain(parent: &Address, class: Option<&Address>, name: &str) -> SNSNode {
     let name_dot = format!("\0{name}");
     let hashed_subdomain_name = name_hash(&name_dot);
 
@@ -99,9 +98,9 @@ pub fn derive_subdomain(parent: &Pubkey, class: Option<&Pubkey>, name: &str) -> 
 pub fn get_seeds_and_key(
     program_id: &Address,
     hashed_name: Vec<u8>, // Hashing is done off-chain
-    name_class_opt: Option<&Pubkey>,
-    parent_name_address_opt: Option<&Pubkey>,
-) -> (Pubkey, Vec<u8>) {
+    name_class_opt: Option<&Address>,
+    parent_name_address_opt: Option<&Address>,
+) -> (Address, Vec<u8>) {
     let mut seeds_vec: Vec<u8> = hashed_name;
 
     let name_class = name_class_opt.cloned().unwrap_or_default();
@@ -127,11 +126,12 @@ pub fn get_seeds_and_key(
 mod tests {
     use super::*;
     use crate::SOL_TLD_ADDRESS;
-    use solana_pubkey::pubkey;
+    use solana_address::address;
 
-    const BONFIDA_DOMAIN_ADDRESS: Pubkey = pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
-    const DEX_BONFIDA_SUBDOMAIN_ADDRESS: Pubkey =
-        pubkey!("HoFfFXqFHAC8RP3duuQNzag1ieUwJRBv1HtRNiWFq4Qu");
+    const BONFIDA_DOMAIN_ADDRESS: Address =
+        address!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
+    const DEX_BONFIDA_SUBDOMAIN_ADDRESS: Address =
+        address!("HoFfFXqFHAC8RP3duuQNzag1ieUwJRBv1HtRNiWFq4Qu");
 
     #[test]
     fn test_sol_hashed_name() {

@@ -24,7 +24,7 @@ pub use pda::{SNSNode, derive_domain, derive_subdomain, derive_tld, name_hash};
 
 use serde::{Deserialize, Serialize};
 use serde_wasm_bindgen::{from_value, to_value};
-use solana_pubkey::Pubkey;
+use solana_address::Address;
 use wasm_bindgen::{JsError, JsValue, prelude::wasm_bindgen};
 
 use crate::name_record::SNSNodeWithOwner;
@@ -47,11 +47,11 @@ pub struct CreateSubdomainCfg {
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 struct CreateSNSRecordCfgInner {
-    payer: Pubkey,
+    payer: Address,
     #[serde(skip_serializing_if = "Option::is_none")]
-    owner: Option<Pubkey>,
+    owner: Option<Address>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    class: Option<Pubkey>,
+    class: Option<Address>,
     name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     space: Option<u32>,
@@ -95,20 +95,21 @@ pub fn build_create_subdomain_instruction(cfg: JsValue) -> Result<JsValue, JsErr
 
 #[cfg(test)]
 mod tests {
+    use solana_address::address;
     use solana_instruction::Instruction;
     use solana_program_error::ProgramError;
-    use solana_pubkey::pubkey;
     use wasm_bindgen_test::wasm_bindgen_test;
 
     use super::*;
     use crate::instruction_builder::NameRegistryInstruction;
 
-    const BONFIDA_DOMAIN_ADDRESS: Pubkey = pubkey!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
+    const BONFIDA_DOMAIN_ADDRESS: Address =
+        address!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
 
     #[wasm_bindgen_test]
     fn test_build_create_instruction() {
         // setup
-        let wallet = Pubkey::new_unique();
+        let wallet = Address::new_unique();
         let name = "bonfida";
         let cfg = CreateDomainCfg {
             inner: CreateSNSRecordCfgInner {
@@ -140,7 +141,7 @@ mod tests {
         assert_eq!(payer.pubkey, wallet);
         assert_eq!(pda.pubkey, BONFIDA_DOMAIN_ADDRESS);
         assert_eq!(owner.pubkey, wallet);
-        assert_eq!(class.pubkey, Pubkey::default());
+        assert_eq!(class.pubkey, Address::default());
         assert_eq!(parent.pubkey, SOL_TLD_ADDRESS);
         assert_eq!(parent_owner.pubkey, SOL_TLD_OWNER_ADDRESS_MAINNET);
         assert_eq!(hashed_name, name_hash(name).to_bytes().to_vec());

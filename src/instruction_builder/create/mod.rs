@@ -3,9 +3,9 @@
 pub mod domain;
 pub mod subdomain;
 
+use solana_address::Address;
 use solana_instruction::{AccountMeta, Instruction};
 use solana_program_error::ProgramError;
-use solana_pubkey::Pubkey;
 use solana_rent::Rent;
 
 use crate::{
@@ -16,10 +16,10 @@ use crate::{
 /// Builds instruction to include in transaction to register SNS record.
 #[derive(Debug, Clone, Copy)]
 pub struct CreateInstBuilder {
-    payer: Pubkey,
+    payer: Address,
     account: SNSNode,
-    owner: Option<Pubkey>,
-    class: Option<Pubkey>,
+    owner: Option<Address>,
+    class: Option<Address>,
     parent: SNSNodeWithOwner,
     space: Option<u32>,
 }
@@ -56,18 +56,18 @@ pub fn calculate_rent_exemption(bytes: u32) -> u64 {
 /// Code ported from archived <https://github.com/solana-labs/solana-program-library>
 #[allow(clippy::too_many_arguments)]
 pub fn create(
-    name_service_program_id: Pubkey,
+    name_service_program_id: Address,
     instruction_data: NameRegistryInstruction,
-    name_account_key: Pubkey,
-    payer_key: Pubkey,
-    name_owner: Pubkey,
-    name_class_opt: Option<Pubkey>,
-    name_parent_opt: Option<Pubkey>,
-    name_parent_owner_opt: Option<Pubkey>,
+    name_account_key: Address,
+    payer_key: Address,
+    name_owner: Address,
+    name_class_opt: Option<Address>,
+    name_parent_opt: Option<Address>,
+    name_parent_owner_opt: Option<Address>,
 ) -> Result<Instruction, ProgramError> {
     let data: Vec<u8> = wincode::serialize(&instruction_data).unwrap();
     let mut accounts = vec![
-        AccountMeta::new_readonly(Pubkey::default(), false), // system program aka null address
+        AccountMeta::new_readonly(Address::default(), false), // system program aka null address
         AccountMeta::new(payer_key, true),
         AccountMeta::new(name_account_key, false),
         AccountMeta::new_readonly(name_owner, false),
@@ -75,12 +75,12 @@ pub fn create(
     if let Some(name_class) = name_class_opt {
         accounts.push(AccountMeta::new_readonly(name_class, true));
     } else {
-        accounts.push(AccountMeta::new_readonly(Pubkey::default(), false));
+        accounts.push(AccountMeta::new_readonly(Address::default(), false));
     }
     if let Some(name_parent) = name_parent_opt {
         accounts.push(AccountMeta::new_readonly(name_parent, false));
     } else {
-        accounts.push(AccountMeta::new_readonly(Pubkey::default(), false));
+        accounts.push(AccountMeta::new_readonly(Address::default(), false));
     }
     if let Some(key) = name_parent_owner_opt {
         accounts.push(AccountMeta::new_readonly(key, true));
