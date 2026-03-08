@@ -3,14 +3,11 @@
 use derive_more::Constructor;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest as _, Sha256};
+use solana_address::Address;
 use solana_hash::Hash;
 use solana_pubkey::Pubkey;
-use spl_name_service::state::get_seeds_and_key;
 
-use crate::{
-    HASH_PREFIX, ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SOL_TLD_ADDRESS, SOL_TLD_NAME_HASH, from_v2,
-    to_v2,
-};
+use crate::{HASH_PREFIX, ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SOL_TLD_ADDRESS, SOL_TLD_NAME_HASH};
 
 /// Programmatically Derived Address (PDA) of SNS record, and its hashed name (created as input to
 /// derivation process).
@@ -59,13 +56,13 @@ pub fn derive_tld(class: Option<&Pubkey>, name: &str) -> SNSNode {
     let hashed_tld_name = name_hash(&dot_name);
 
     let (tld, _) = get_seeds_and_key(
-        &to_v2(SNS_PROGRAM_ID),
+        &SNS_PROGRAM_ID,
         hashed_tld_name.to_bytes().to_vec(),
-        class.map(|c| to_v2(*c)).as_ref(),
-        Some(&to_v2(ROOT_TLD_ADDRESS)),
+        class,
+        Some(&ROOT_TLD_ADDRESS),
     );
 
-    SNSNode::new(from_v2(tld), hashed_tld_name)
+    SNSNode::new(tld, hashed_tld_name)
 }
 
 /// Returns PDA of domain with given name and TLD.
@@ -73,14 +70,10 @@ pub fn derive_tld(class: Option<&Pubkey>, name: &str) -> SNSNode {
 /// Spec: <https://sns.guide/domain-name/domain-tld.html>
 pub fn derive_domain(tld: &Pubkey, class: Option<&Pubkey>, name: &str) -> SNSNode {
     let hashed_name = name_hash(name);
-    let (domain, _) = get_seeds_and_key(
-        &to_v2(SNS_PROGRAM_ID),
-        hashed_name.to_bytes().to_vec(),
-        class.map(|c| to_v2(*c)).as_ref(),
-        Some(&to_v2(*tld)),
-    );
+    let (domain, _) =
+        get_seeds_and_key(&SNS_PROGRAM_ID, hashed_name.to_bytes().to_vec(), class, Some(tld));
 
-    SNSNode::new(from_v2(domain), hashed_name)
+    SNSNode::new(domain, hashed_name)
 }
 
 /// Returns PDA of subdomain with given name and parent.
@@ -93,13 +86,41 @@ pub fn derive_subdomain(parent: &Pubkey, class: Option<&Pubkey>, name: &str) -> 
     let hashed_subdomain_name = name_hash(&name_dot);
 
     let (subdomain, _) = get_seeds_and_key(
-        &to_v2(SNS_PROGRAM_ID),
+        &SNS_PROGRAM_ID,
         hashed_subdomain_name.to_bytes().to_vec(),
-        class.map(|c| to_v2(*c)).as_ref(),
-        Some(&to_v2(*parent)),
+        class,
+        Some(parent),
     );
 
-    SNSNode::new(from_v2(subdomain), hashed_subdomain_name)
+    SNSNode::new(subdomain, hashed_subdomain_name)
+}
+
+/// Code ported from archived <https://github.com/solana-labs/solana-program-library>
+pub fn get_seeds_and_key(
+    program_id: &Address,
+    hashed_name: Vec<u8>, // Hashing is done off-chain
+    name_class_opt: Option<&Pubkey>,
+    parent_name_address_opt: Option<&Pubkey>,
+) -> (Pubkey, Vec<u8>) {
+    let mut seeds_vec: Vec<u8> = hashed_name;
+
+    let name_class = name_class_opt.cloned().unwrap_or_default();
+
+    for b in name_class.to_bytes() {
+        seeds_vec.push(b);
+    }
+
+    let parent_name_address = parent_name_address_opt.cloned().unwrap_or_default();
+
+    for b in parent_name_address.to_bytes() {
+        seeds_vec.push(b);
+    }
+
+    let (name_account_key, bump) =
+        Address::find_program_address(&seeds_vec.chunks(32).collect::<Vec<&[u8]>>(), program_id);
+    seeds_vec.push(bump);
+
+    (name_account_key, seeds_vec)
 }
 
 #[cfg(test)]

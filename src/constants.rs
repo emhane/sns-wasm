@@ -1,12 +1,13 @@
 //! Solana public keys involved in SNS.
 
+use solana_address::address;
 use solana_hash::Hash;
 use solana_pubkey::{Pubkey, pubkey};
 
 /// Solana Name Service (SNS) Program ID.
 ///
 /// <https://explorer.solana.com/address/namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX>
-pub const SNS_PROGRAM_ID: Pubkey = pubkey!("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX");
+pub const SNS_PROGRAM_ID: Pubkey = address!("namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX");
 
 /// Root SNS node PDA.
 ///
