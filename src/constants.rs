@@ -42,3 +42,10 @@ pub const SOL_TLD_NAME_HASH: Hash = Hash::new_from_array([
 /// [`derive_tld`](crate::derive_tld), [`derive_domain`](crate::derive_domain) and
 /// [`derive_subdomain`](crate::derive_subdomain).
 pub const HASH_PREFIX: &str = "SPL Name Service";
+
+/// Minimum length of SNS record is length of header, 96 bytes, containing:
+///
+/// - parent PDA
+/// - owner address
+/// - class address
+pub const SNS_RECORD_HEADER_BYTE_LEN: usize = 96;

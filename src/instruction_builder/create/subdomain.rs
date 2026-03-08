@@ -42,7 +42,7 @@ impl CreateSubdomainInstBuilder {
     }
 
     /// Sets additional blockchain space to allocate for SNS record other than minimum reserved for
-    /// [`NameRecordHeader::LEN`].
+    /// [`SNS_RECORD_HEADER_BYTE_LEN`].
     ///
     /// Registering domains at <https://v1.sns.id> allocates 10 KB extra.
     pub fn space(mut self, space: Option<u32>) -> Self {

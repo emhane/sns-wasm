@@ -3,18 +3,14 @@
 pub mod domain;
 pub mod subdomain;
 
-use solana_instruction::Instruction;
+use solana_instruction::{AccountMeta, Instruction};
 use solana_program_error::ProgramError;
 use solana_pubkey::Pubkey;
 use solana_rent::Rent;
-use spl_name_service::{
-    instruction::{NameRegistryInstruction, create},
-    solana_program::program_pack::Pack as _,
-    state::NameRecordHeader,
-};
 
 use crate::{
-    SNS_PROGRAM_ID, SNSNode, from_v2_err, from_v2_instr, name_record::SNSNodeWithOwner, to_v2,
+    SNS_PROGRAM_ID, SNSNode, constants::SNS_RECORD_HEADER_BYTE_LEN,
+    instruction_builder::NameRegistryInstruction, name_record::SNSNodeWithOwner,
 };
 
 /// Builds instruction to include in transaction to register SNS record.
@@ -48,22 +44,47 @@ impl CreateInstBuilder {
         let inst = NameRegistryInstruction::Create { hashed_name, lamports, space };
 
         // instruction to register new sns node
-        create(
-            to_v2(SNS_PROGRAM_ID),
-            inst,
-            to_v2(pda),
-            to_v2(payer),
-            to_v2(owner),
-            class.map(to_v2),
-            Some(to_v2(parent)),
-            Some(to_v2(parent_owner)),
-        )
-        .map(from_v2_instr)
-        .map_err(from_v2_err)
+        create(SNS_PROGRAM_ID, inst, pda, payer, owner, class, Some(parent), Some(parent_owner))
     }
 }
 
-/// Returns rent exemption in lamports for [`NameRecordHeader::LEN`] + given space in bytes.
+/// Returns rent exemption in lamports for [`SNS_RECORD_HEADER_BYTE_LEN`] + given space in bytes.
 pub fn calculate_rent_exemption(bytes: u32) -> u64 {
-    Rent::default().minimum_balance((bytes as usize).saturating_add(NameRecordHeader::LEN))
+    Rent::default().minimum_balance((bytes as usize).saturating_add(SNS_RECORD_HEADER_BYTE_LEN))
+}
+
+/// Code ported from archived <https://github.com/solana-labs/solana-program-library>
+#[allow(clippy::too_many_arguments)]
+pub fn create(
+    name_service_program_id: Pubkey,
+    instruction_data: NameRegistryInstruction,
+    name_account_key: Pubkey,
+    payer_key: Pubkey,
+    name_owner: Pubkey,
+    name_class_opt: Option<Pubkey>,
+    name_parent_opt: Option<Pubkey>,
+    name_parent_owner_opt: Option<Pubkey>,
+) -> Result<Instruction, ProgramError> {
+    let data: Vec<u8> = bincode::serialize(&instruction_data).unwrap();
+    let mut accounts = vec![
+        AccountMeta::new_readonly(Pubkey::default(), false), // system program aka null address
+        AccountMeta::new(payer_key, true),
+        AccountMeta::new(name_account_key, false),
+        AccountMeta::new_readonly(name_owner, false),
+    ];
+    if let Some(name_class) = name_class_opt {
+        accounts.push(AccountMeta::new_readonly(name_class, true));
+    } else {
+        accounts.push(AccountMeta::new_readonly(Pubkey::default(), false));
+    }
+    if let Some(name_parent) = name_parent_opt {
+        accounts.push(AccountMeta::new_readonly(name_parent, false));
+    } else {
+        accounts.push(AccountMeta::new_readonly(Pubkey::default(), false));
+    }
+    if let Some(key) = name_parent_owner_opt {
+        accounts.push(AccountMeta::new_readonly(key, true));
+    }
+
+    Ok(Instruction { program_id: name_service_program_id, accounts, data })
 }
