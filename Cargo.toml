@@ -64,7 +64,6 @@ sha2 = "0.10"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3"
-solana-address = { version = "2.2", features = ["atomic"] }
 
 [profile.release]
 opt-level = 'z' # optimize for size

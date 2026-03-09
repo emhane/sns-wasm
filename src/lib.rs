@@ -110,10 +110,9 @@ mod tests {
     #[wasm_bindgen_test]
     fn test_build_create_instruction() {
         // setup
-        let wallet = Address::new_unique();
         let cfg = CreateDomainCfg {
             inner: CreateSNSRecordCfgInner {
-                payer: wallet,
+                payer: PAYER,
                 name: NAME.to_string(),
                 ..Default::default()
             },
