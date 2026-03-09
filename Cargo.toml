@@ -8,6 +8,7 @@ repository = "https://github.com/emhane/sns-wasm"
 readme = "README.md"
 keywords = ["solana", "sns", "name-service-program"]
 categories = ["api-bindings", "cryptography::cryptocurrencies", "wasm", "web-programming"]
+publish = false
 
 [lints]
 rust.missing_debug_implementations = "warn"
@@ -48,6 +49,7 @@ sha2 = "0.10"
 [dev-dependencies]
 wasm-bindgen-test = "0.3"
 solana-address = { version = "2.2", features = ["curve25519", "wincode", "serde", "decode", "atomic"] }
+serde_json = "1.0"
 
 [profile.release]
 opt-level = 'z' # optimize for size

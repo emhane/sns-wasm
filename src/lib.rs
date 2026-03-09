@@ -34,6 +34,7 @@ use crate::name_record::SNSNodeWithOwner;
 pub struct CreateDomainCfg {
     #[serde(flatten)]
     inner: CreateSNSRecordCfgInner,
+    #[serde(flatten)]
     tld: SNSNodeWithOwner,
 }
 
@@ -42,18 +43,17 @@ pub struct CreateDomainCfg {
 pub struct CreateSubdomainCfg {
     #[serde(flatten)]
     inner: CreateSNSRecordCfgInner,
+    #[serde(flatten)]
     domain: SNSNodeWithOwner,
 }
 
+/// Params to create instruction to register new SNS subdomain record.
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
-struct CreateSNSRecordCfgInner {
+pub struct CreateSNSRecordCfgInner {
     payer: Address,
-    #[serde(skip_serializing_if = "Option::is_none")]
     owner: Option<Address>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     class: Option<Address>,
     name: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
     space: Option<u32>,
 }
 
@@ -106,24 +106,25 @@ mod tests {
 
     const BONFIDA_DOMAIN_ADDRESS: Address =
         address!("Crf8hzfthWGbGbLTVCiqRqV5MVnbpHB1L9KQMd6gsinb");
+    const PAYER: Address = address!("1113eKEmP3gmGaNeoKSVoYwPpyfTmrmizMbi1TqGj2");
+    const NAME: &str = "bonfida";
 
     #[wasm_bindgen_test]
     fn test_build_create_instruction() {
         // setup
         let wallet = Address::new_unique();
-        let name = "bonfida";
         let cfg = CreateDomainCfg {
             inner: CreateSNSRecordCfgInner {
                 payer: wallet,
-                name: name.to_string(),
+                name: NAME.to_string(),
                 ..Default::default()
             },
             tld: TLDomain::sol_mainnet().into(),
         };
         let js_cfg = to_value(&cfg).expect("should serialize");
+
         // test
         let js_inst = build_create_domain_instruction(js_cfg).expect("should build instruction");
-
         let res: Result<Instruction, ProgramError> =
             from_value(js_inst).expect("should deserialize");
         let inst = res.expect("should return instruction");
@@ -139,13 +140,13 @@ mod tests {
         };
 
         assert_eq!(inst.program_id, SNS_PROGRAM_ID);
-        assert_eq!(payer.pubkey, wallet);
+        assert_eq!(payer.pubkey, PAYER);
         assert_eq!(pda.pubkey, BONFIDA_DOMAIN_ADDRESS);
-        assert_eq!(owner.pubkey, wallet);
+        assert_eq!(owner.pubkey, PAYER);
         assert_eq!(class.pubkey, Address::default());
         assert_eq!(parent.pubkey, SOL_TLD_ADDRESS);
         assert_eq!(parent_owner.pubkey, SOL_TLD_OWNER_ADDRESS_MAINNET);
-        assert_eq!(hashed_name, name_hash(name).to_bytes().to_vec());
+        assert_eq!(hashed_name, name_hash(NAME).to_bytes().to_vec());
         assert_eq!(lamports, calculate_rent_exemption(0));
         assert_eq!(space, 0)
     }

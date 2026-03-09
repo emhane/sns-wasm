@@ -610,6 +610,7 @@ dependencies = [
  "derive_more",
  "serde",
  "serde-wasm-bindgen",
+ "serde_json",
  "sha2",
  "solana-address",
  "solana-hash",

@@ -14,8 +14,10 @@ use crate::{
 #[derive(Debug, Clone, Copy, Default, Constructor, Serialize, Deserialize)]
 pub struct SNSNodeWithOwner {
     /// Programmatically Derived Address (PDA) of this account.
+    #[serde(rename = "tld", alias = "domain")]
     pub pda: Address,
     /// Owner of account.
+    #[serde(rename = "tldOwner", alias = "domainOwner")]
     pub owner: Address,
 }
 
