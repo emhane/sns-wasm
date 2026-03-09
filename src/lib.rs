@@ -94,6 +94,7 @@ pub fn build_create_subdomain_instruction(cfg: JsValue) -> Result<JsValue, JsErr
 
 #[cfg(test)]
 mod tests {
+    // snips-start: example
     use solana_address::address;
     use solana_instruction::Instruction;
     use solana_program_error::ProgramError;
@@ -147,4 +148,5 @@ mod tests {
         assert_eq!(lamports, calculate_rent_exemption(0));
         assert_eq!(space, 0)
     }
+    // snips-end: example
 }
