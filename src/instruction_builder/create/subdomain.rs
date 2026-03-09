@@ -24,7 +24,7 @@ impl CreateSubdomainInstBuilder {
     /// - Reserves no extra space for user data, like URLs and social media handles. See
     ///   [`space`](Self::space)
     /// - Unless [`owner`](Self::owner) explicitly set defaults to payer
-    /// - Unless [`class``](Self::class) explicitly set defaults to System Program (null address),
+    /// - Unless [`class`](Self::class) explicitly set defaults to System Program (null address),
     pub fn new(payer: Address, domain: Domain, name: String) -> Self {
         Self { domain: domain.into(), payer, owner: None, class: None, name, space: None }
     }
@@ -42,7 +42,7 @@ impl CreateSubdomainInstBuilder {
     }
 
     /// Sets additional blockchain space to allocate for SNS record other than minimum reserved for
-    /// [`SNS_RECORD_HEADER_BYTE_LEN`].
+    /// [`SNS_RECORD_HEADER_BYTE_LEN`](crate::SNS_RECORD_HEADER_BYTE_LEN).
     ///
     /// Registering domains at <https://v1.sns.id> allocates 10 KB extra.
     pub fn space(mut self, space: Option<u32>) -> Self {

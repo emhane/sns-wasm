@@ -31,7 +31,7 @@ pub enum NameRegistryInstruction {
     ///   3. `[]` Account owner (written into `NameRecordHeader::owner`)
     ///   4. `[signer]` Account class (written into `NameRecordHeader::class`). If
     ///      `Address::default()` then the `signer` bit is not required
-    ///   5. `[]` Parent name record (written into `NameRecordHeader::parent_name).
+    ///   5. `[]` Parent name record (written into `NameRecordHeader::parent_name`).
     ///      `Address::default()` is equivalent to no existing parent.
     ///   6. `[signer]` Owner of the parent name record. Optional but needed if parent name
     ///      different than default.

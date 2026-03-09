@@ -34,7 +34,7 @@ impl TLDomain {
     }
 
     /// Returns new instance with given owner and deriving PDA from given class + name +
-    /// [`ROOT_TLD_ADDRESS`].
+    /// [`ROOT_TLD_ADDRESS`](crate::ROOT_TLD_ADDRESS).
     pub fn derive_new(owner: Address, class: Option<&Address>, name: &str) -> Self {
         let SNSNode { pda, .. } = derive_tld(class, name);
         Self(SNSNodeWithOwner::new(pda, owner))
@@ -99,7 +99,7 @@ impl Subdomain {
     }
 
     /// Returns new instance with given owner and deriving PDA from given class + name +
-    /// parent [sub]domain.
+    /// parent SNS record.
     pub fn derive_new(
         parent: &Address,
         owner: Address,

@@ -13,8 +13,8 @@ pub mod name_record;
 pub mod pda;
 
 pub use constants::{
-    HASH_PREFIX, ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SOL_TLD_ADDRESS, SOL_TLD_NAME_HASH,
-    SOL_TLD_OWNER_ADDRESS_MAINNET,
+    HASH_PREFIX, ROOT_TLD_ADDRESS, SNS_PROGRAM_ID, SNS_RECORD_HEADER_BYTE_LEN, SOL_TLD_ADDRESS,
+    SOL_TLD_NAME_HASH, SOL_TLD_OWNER_ADDRESS_MAINNET,
 };
 pub use instruction_builder::create::calculate_rent_exemption;
 pub use name_record::{Domain, Subdomain, TLDomain};
