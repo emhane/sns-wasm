@@ -1,1 +1,4 @@
 array-size-threshold = 16384 # 16 KiB (safe for wasm's 1MB stack)
+pass-by-value-size-limit = 16
+trivial-copy-size-limit = 8
+#avoid-breaking-exported-api = false

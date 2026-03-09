@@ -7,8 +7,6 @@
 //! instruction is currently supported. </div>
 //! Client-side SNS-WASM SDK.
 
-#![warn(clippy::large_stack_arrays)]
-
 pub mod constants;
 pub mod instruction_builder;
 pub mod name_record;

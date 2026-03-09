@@ -8,7 +8,21 @@ repository = "https://github.com/emhane/sns-wasm"
 readme = "README.md"
 keywords = ["solana", "sns", "name-service-program"]
 categories = ["api-bindings", "cryptography::cryptocurrencies", "wasm", "web-programming"]
-publish = false
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = [
+    "-Oz", 
+    "--enable-simd", 
+    "--enable-bulk-memory", 
+    "--enable-nontrapping-float-to-int"
+]
+
+[package.metadata.docs.rs]
+#all-features = true
+default-target = "wasm32-unknown-unknown"
+
+[lib]
+crate-type = ["lib", "cdylib"]
 
 [lints]
 rust.missing_debug_implementations = "warn"
@@ -16,11 +30,13 @@ rust.missing_docs = "warn"
 rust.rust_2018_idioms = { level = "deny", priority = -1 }
 rust.unreachable_pub = "warn"
 rust.unused_must_use = "deny"
+rust.unnameable-types = "warn"
+rust.unused_crate_dependencies = "warn"
+clippy.needless_pass_by_value = "warn"
+clippy.trivially_copy_pass_by_ref = "warn"
+clippy.large_types_passed_by_value = "warn"
+clippy.large_stack_arrays = "warn"
 rustdoc.all = "warn"
-# rust.unnameable-types = "warn"
-
-[lib]
-crate-type = ["lib", "cdylib"]
 
 [dependencies]
 # solana
@@ -48,11 +64,11 @@ sha2 = "0.10"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3"
-solana-address = { version = "2.2", features = ["curve25519", "wincode", "serde", "decode", "atomic"] }
-serde_json = "1.0"
+solana-address = { version = "2.2", features = ["atomic"] }
 
 [profile.release]
 opt-level = 'z' # optimize for size
 lto = 'fat'
 codegen-units = 1
 panic = "abort"
+strip = true 

@@ -44,7 +44,7 @@ impl CreateInstBuilder {
         let inst = NameRegistryInstruction::Create { hashed_name, lamports, space };
 
         // instruction to register new sns node
-        create(SNS_PROGRAM_ID, inst, pda, payer, owner, class, Some(parent), Some(parent_owner))
+        create(SNS_PROGRAM_ID, &inst, pda, payer, owner, class, Some(parent), Some(parent_owner))
     }
 }
 
@@ -57,7 +57,7 @@ pub fn calculate_rent_exemption(bytes: u32) -> u64 {
 #[allow(clippy::too_many_arguments)]
 pub fn create(
     name_service_program_id: Address,
-    instruction_data: NameRegistryInstruction,
+    instruction_data: &NameRegistryInstruction,
     name_account_key: Address,
     payer_key: Address,
     name_owner: Address,
